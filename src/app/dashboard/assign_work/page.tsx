@@ -3,7 +3,7 @@ import User from "@/models/User"
 import { cookies } from "next/headers"
 import jwt from "jsonwebtoken"
 import type { CurrentUser, TeamMember } from "@/types"
-import TeamClientWrapper from "./TeamClientWrapper"
+import TeamClientWrapper from "./TeamClientWrapper" 
 
 const JWT_SECRET = process.env.JWT_SECRET!
 
@@ -26,13 +26,11 @@ export default async function TeamPage() {
   }
 
   const team = await User.find({}, { name: 1, role: 1, email: 1, _id: 0 }).lean() as TeamMember[]
-  const filteredTeam = team.filter(
-    (member) => member.name !== currentUser.name
-  )
+  const filteredTeam = team.filter((member) => member.name !== currentUser!.name)
 
   return (
     <TeamClientWrapper
-      team={filteredTeam}
+      team={JSON.parse(JSON.stringify(filteredTeam))}
       currentUser={currentUser}
     />
   )
