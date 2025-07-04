@@ -1,7 +1,12 @@
-// src/app/api/complete-task/route.ts
 import { NextResponse } from "next/server"
 import connectDB from "@/lib/db"
 import User from "@/models/User"
+
+interface Task {
+  title: string
+  priority: string
+  status: string
+}
 
 export async function POST(req: Request) {
   try {
@@ -18,7 +23,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "User not found" }, { status: 404 })
     }
 
-    const task = user.tasks.find((t: any) => t.title === taskTitle)
+    const task = (user.tasks as Task[]).find((t) => t.title === taskTitle)
     if (!task) {
       return NextResponse.json({ error: "Task not found" }, { status: 404 })
     }

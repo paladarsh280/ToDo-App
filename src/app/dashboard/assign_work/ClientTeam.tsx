@@ -3,20 +3,29 @@
 import { useState } from "react"
 import Button from "@mui/material/Button"
 
-export default function ClientTeam({
-  team,
-  currentUser,
-}: {
-  team: any[]
-  currentUser: { name: string }
-}) {
-  const [forms, setForms] = useState<{
-    [key: string]: { title: string; priority: string; duration: string }
-  }>({})
+type TaskForm = {
+  title: string
+  priority: string
+  duration: string
+}
 
-  const [messages, setMessages] = useState<{ [key: string]: string }>({})
+type TeamMember = {
+  name: string
+  role: string
+}
 
-  const handleInputChange = (name: string, field: string, value: string) => {
+type Props = {
+  team: TeamMember[]
+  currentUser: {
+    name: string
+  }
+}
+
+export default function ClientTeam({ team, currentUser }: Props) {
+  const [forms, setForms] = useState<Record<string, TaskForm>>({})
+  const [messages, setMessages] = useState<Record<string, string>>({})
+
+  const handleInputChange = (name: string, field: keyof TaskForm, value: string) => {
     setForms((prev) => ({
       ...prev,
       [name]: {
@@ -58,8 +67,7 @@ export default function ClientTeam({
         ...prev,
         [assigneeName]: data.message || data.error || "",
       }))
-    } catch (err) {
-      console.error(err)
+    } catch {
       setMessages((prev) => ({
         ...prev,
         [assigneeName]: "❌ Something went wrong",
@@ -71,7 +79,7 @@ export default function ClientTeam({
     <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-gray-100">
       <h1 className="text-3xl font-bold mb-10 text-gray-800">Team Members</h1>
 
-      {team.map((member, i) => {
+      {team.map((member) => {
         const form = forms[member.name] || {
           title: "",
           priority: "",
@@ -82,7 +90,7 @@ export default function ClientTeam({
 
         return (
           <div
-            key={i}
+            key={member.name}
             className="w-full max-w-md bg-white rounded-2xl shadow-lg p-6 mb-8 text-center"
           >
             <div className="text-4xl font-bold text-indigo-700 mb-2">
