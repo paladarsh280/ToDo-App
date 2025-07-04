@@ -1,20 +1,32 @@
+
 import { NextRequest, NextResponse } from "next/server"
 import connectDB from "@/lib/db"
 import User from "@/models/User"
 import jwt from "jsonwebtoken"
 
-const JWT_SECRET = process.env.JWT_SECRET!
+const JWT_SECRET = process.env.JWT_SECRET
 
 export async function GET(req: NextRequest) {
-  await connectDB()
-
-  const token = req.cookies.get("token")?.value
-  if (!token) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-  }
-
   try {
-    const decoded = jwt.verify(token, JWT_SECRET) as { id: string }
+    await connectDB()
+
+    const token = req.cookies.get("token")?.value
+
+    if (!token) {
+      return NextResponse.json({ error: "Unauthorized: No token" }, { status: 401 })
+    }
+
+    if (!JWT_SECRET) {
+      return NextResponse.json({ error: "Server misconfiguration: Missing JWT_SECRET" }, { status: 500 })
+    }
+
+    let decoded
+    try {
+      decoded = jwt.verify(token, JWT_SECRET) as { id: string }
+    } catch (err) {
+      return NextResponse.json({ error: "Invalid token" }, { status: 401 })
+    }
+
     const user = await User.findById(decoded.id)
 
     if (!user) {
@@ -26,6 +38,7 @@ export async function GET(req: NextRequest) {
       userId: user._id,
     })
   } catch (err) {
-    return NextResponse.json({ error: "Invalid token" }, { status: 401 })
+    console.error("Server error in /api/get-tasks:", err)
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }
 }

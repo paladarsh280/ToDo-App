@@ -2,7 +2,11 @@ import connectDB from "@/lib/db";
 import User from "@/models/User";
 import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
-import TeamClientWrapper from "./TeamClientWrapper";
+import dynamic from "next/dynamic";
+
+const TeamClientWrapper = dynamic(() => import("./TeamClientWrapper"), {
+  ssr: false,
+});
 
 const JWT_SECRET = process.env.JWT_SECRET!;
 
@@ -29,7 +33,7 @@ export default async function TeamPage() {
     return <div className="p-6 text-red-600">Unauthorized</div>;
   }
 
-  const team = await User.find();
+  const team = await User.find({}, { name: 1, role: 1, email: 1, _id: 0 });
   const filteredTeam = team.filter(
     (member: any) => member.name !== currentUser?.name
   );

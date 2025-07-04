@@ -1,19 +1,18 @@
 import Link from "next/link"
 import Button from "@mui/material/Button"
+import Image from "next/image"
 
 export default function Home() {
   return (
     <>
-      {/* Header Navbar */}
+      
       <header className="bg-white shadow-md sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            {/* Logo */}
             <div className="text-2xl font-extrabold text-blue-600 tracking-wide">
               Team<span className="text-gray-800">ToDo</span>
             </div>
 
-            {/* Navigation Buttons */}
             <nav className="flex items-center gap-4">
               <Link href="/our_team" passHref>
                 <Button
@@ -47,11 +46,13 @@ export default function Home() {
       </header>
 
       
-      <div className="w-full  overflow-hidden">
-        <img
+      <div className="relative w-full h-[calc(100vh-0rem)]">
+        <Image
           src="/teamwork2.png"
           alt="Teamwork illustration"
-          className="w-full h-full object-cover"
+          fill 
+          className="object-cover"
+          priority
         />
       </div>
     </>

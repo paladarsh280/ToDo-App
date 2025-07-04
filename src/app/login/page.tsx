@@ -1,48 +1,7 @@
-// "use client";
-// import { useState } from "react";
-// import { redirect } from 'next/navigation'
-// export default function LoginPage() {
-//   const [form, setForm] = useState({ email: "", password: "" });
-//   const [message, setMessage] = useState("");
-
-//   const handleSubmit = async (e: React.FormEvent) => {
-//     e.preventDefault();
-//     const res = await fetch("/api/login", {
-//       method: "POST",
-//       body: JSON.stringify(form),
-//     });
-    
-//     const data = await res.json();
-    
-//     if (data.token) {
-//       localStorage.setItem("token", data.token);
-//       setMessage("Login successful");
-//     } else {
-//       setMessage(data.error);
-//     }
-//    // redirect("/dashboard");
-//   };
-
-//   return (
-//     <div className="max-w-md mx-auto mt-20 p-6 border rounded">
-//       <h2 className="text-xl font-bold mb-4">Login</h2>
-//       <form onSubmit={handleSubmit} className="space-y-3">
-//         <input type="email" placeholder="Email" required
-//           onChange={(e) => setForm({ ...form, email: e.target.value })}
-//           className="w-full border p-2 rounded" />
-//         <input type="password" placeholder="Password" required
-//           onChange={(e) => setForm({ ...form, password: e.target.value })}
-//           className="w-full border p-2 rounded" />
-//         <button type="submit" className="w-full bg-green-600 text-white p-2 rounded">Login</button>
-//       </form>
-//       {message && <p className="mt-2 text-sm">{message}</p>}
-//     </div>
-//   );
-// }
-
 "use client"
+
 import { useState } from "react"
-import { redirect, useRouter } from "next/navigation"
+import { useRouter } from "next/navigation"
 
 export default function LoginPage() {
   const [form, setForm] = useState({ email: "", password: "" })
@@ -52,35 +11,41 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    const res = await fetch("/api/login", {
-      method: "POST",
-      body: JSON.stringify(form),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
+    try {
+      const res = await fetch("/api/login", {
+        method: "POST",
+        body: JSON.stringify(form),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
 
-    const data = await res.json()
+      const data = await res.json()
 
-    if (res.ok) {
-      setMessage(" Login successful!")
-     redirect("/dashboard");
-    } else {
-      setMessage(` ${data.error}`)
+      if (res.ok) {
+        setMessage("✅ Login successful! Redirecting...")
+        // Redirect client-side
+        setTimeout(() => router.push("/dashboard"), 1000)
+      } else {
+        setMessage(`❌ ${data.error || "Login failed"}`)
+      }
+    } catch (err) {
+      setMessage("❌ Something went wrong. Please try again.")
     }
   }
 
   return (
-    <div className="max-w-md mx-auto mt-20 p-6 border rounded">
-      <h2 className="text-xl font-bold mb-4">Login</h2>
-      <form onSubmit={handleSubmit} className="space-y-3">
+    <div className="max-w-md mx-auto mt-20 p-6 border rounded bg-white shadow">
+      <h2 className="text-2xl font-bold mb-4 text-center text-gray-800">Login</h2>
+
+      <form onSubmit={handleSubmit} className="space-y-4">
         <input
           type="email"
           placeholder="Email"
           required
           value={form.email}
           onChange={(e) => setForm({ ...form, email: e.target.value })}
-          className="w-full border p-2 rounded"
+          className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         <input
           type="password"
@@ -88,14 +53,19 @@ export default function LoginPage() {
           required
           value={form.password}
           onChange={(e) => setForm({ ...form, password: e.target.value })}
-          className="w-full border p-2 rounded"
+          className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
-        <button type="submit" className="w-full bg-green-600 text-white p-2 rounded">
+        <button
+          type="submit"
+          className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded transition"
+        >
           Login
         </button>
       </form>
-      {message && <p className="mt-2 text-sm">{message}</p>}
+
+      {message && (
+        <p className="mt-4 text-sm text-center text-gray-700">{message}</p>
+      )}
     </div>
   )
 }
-

@@ -8,7 +8,7 @@ export default function ClientTeam({
   currentUser,
 }: {
   team: any[]
-  currentUser: any
+  currentUser: { name: string }
 }) {
   const [forms, setForms] = useState<{
     [key: string]: { title: string; priority: string; duration: string }
@@ -29,7 +29,10 @@ export default function ClientTeam({
   const assignWork = async (assigneeName: string) => {
     const form = forms[assigneeName]
     if (!form?.title || !form?.priority || !form?.duration) {
-      setMessages((prev) => ({ ...prev, [assigneeName]: "❌ Please fill all fields." }))
+      setMessages((prev) => ({
+        ...prev,
+        [assigneeName]: "❌ Please fill all fields.",
+      }))
       return
     }
 
@@ -51,12 +54,12 @@ export default function ClientTeam({
       })
 
       const data = await res.json()
-
       setMessages((prev) => ({
         ...prev,
         [assigneeName]: data.message || data.error || "",
       }))
     } catch (err) {
+      console.error(err)
       setMessages((prev) => ({
         ...prev,
         [assigneeName]: "❌ Something went wrong",
@@ -68,7 +71,7 @@ export default function ClientTeam({
     <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-gray-100">
       <h1 className="text-3xl font-bold mb-10 text-gray-800">Team Members</h1>
 
-      {team.map((member: any, i: number) => {
+      {team.map((member, i) => {
         const form = forms[member.name] || {
           title: "",
           priority: "",
@@ -131,7 +134,15 @@ export default function ClientTeam({
               Assign Work
             </Button>
 
-            {message && <p className="mt-2 text-sm text-green-600">{message}</p>}
+            {message && (
+              <p
+                className={`mt-2 text-sm ${
+                  message.startsWith("❌") ? "text-red-600" : "text-green-600"
+                }`}
+              >
+                {message}
+              </p>
+            )}
           </div>
         )
       })}
