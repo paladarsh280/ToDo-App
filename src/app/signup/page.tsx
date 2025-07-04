@@ -24,15 +24,15 @@ export default function SignupPage() {
     setMessage(data.message || data.error)
 
     if (res.ok) {
-      // Redirect after short delay
+     
       setTimeout(() => router.push("/login"), 1000)
     }
   }
 
   return (
     <div className="max-w-md mx-auto mt-20 p-6 border rounded shadow bg-white">
-      <h2 className="text-xl font-bold mb-4 text-center">Sign Up</h2>
-      <form onSubmit={handleSubmit} className="space-y-3">
+      <h2 className="text-xl  text-black font-bold mb-4 text-center">Sign Up</h2>
+      <form onSubmit={handleSubmit} className="space-y-3  text-black">
         <input
           type="text"
           placeholder="Name"

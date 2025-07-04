@@ -46,15 +46,14 @@ export default function Home() {
       </header>
 
       
-      <div className="relative w-full h-[calc(100vh-0rem)]">
-        <Image
-          src="/teamwork2.png"
-          alt="Teamwork illustration"
-          fill 
-          className="object-cover"
-          priority
-        />
-      </div>
+   <div className="w-full  mt-0">
+  <img
+    src="/teamwork2.png"
+    alt="Teamwork illustration"
+    className="w-full h-full object-cover"
+  />
+</div>
+
     </>
   )
 }

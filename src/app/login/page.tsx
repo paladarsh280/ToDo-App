@@ -45,7 +45,7 @@ export default function LoginPage() {
           required
           value={form.email}
           onChange={(e) => setForm({ ...form, email: e.target.value })}
-          className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full border text-black border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         <input
           type="password"
@@ -53,7 +53,7 @@ export default function LoginPage() {
           required
           value={form.password}
           onChange={(e) => setForm({ ...form, password: e.target.value })}
-          className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full border text-black border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         <button
           type="submit"
