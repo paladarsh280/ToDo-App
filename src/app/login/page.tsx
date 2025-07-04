@@ -24,7 +24,7 @@ export default function LoginPage() {
 
       if (res.ok) {
         setMessage("✅ Login successful! Redirecting...")
-        // Redirect client-side
+      
         setTimeout(() => router.push("/dashboard"), 1000)
       } else {
         setMessage(`❌ ${data.error || "Login failed"}`)
